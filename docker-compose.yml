@@ -1,0 +1,29 @@
+version: '3.8'
+
+services:
+  wordpress_vuln:
+    image: wordpress:7.0.1-php8.2-apache
+    ports:
+      - "8080:80"
+    restart: always
+    environment:
+      WORDPRESS_DB_HOST: db_vuln:3306
+      WORDPRESS_DB_USER: wp_user
+      WORDPRESS_DB_PASSWORD: secret_password
+      WORDPRESS_DB_NAME: wordpress_db
+    depends_on:
+      - db_vuln
+
+  db_vuln:
+    image: mysql:8.0
+    restart: always
+    environment:
+      MYSQL_DATABASE: wordpress_db
+      MYSQL_USER: wp_user
+      MYSQL_PASSWORD: secret_password
+      MYSQL_ROOT_PASSWORD: root_password
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
